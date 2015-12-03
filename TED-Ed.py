@@ -18,6 +18,30 @@ div_main = soup.find("div", class_="pages-main")
 index = header.find("a", class_="g-logo-small banner__logo")
 index['href'] = './index.html'
 
+videoLink = soup.find("div", class_="row-sm-4up")
+videoHref = videoLink.find_all("a")
+cnt = 1
+for a in videoHref:
+	if(cnt == 1 or cnt == 2):
+		a['href'] = './video1'
+	elif(cnt == 3 or cnt == 4):
+		a['href'] = './video2' 
+	elif(cnt == 5 or cnt == 6):
+		a['href'] = './video3' 
+	elif(cnt == 7 or cnt == 8):
+		a['href'] = './video4'
+	elif(cnt == 9 or cnt == 10):
+		a['href'] = './video5'
+	elif(cnt == 11 or cnt == 12):
+		a['href'] = './video6'
+	elif(cnt == 13 or cnt == 14):
+		a['href'] = './video7'
+	elif(cnt == 15 or cnt == 16):
+		a['href'] = './video8'	
+	cnt += 1	
+	# print a['href'] 
+
+
 for a in header.find_all("a", class_="nav__link"):
 	a.extract()
 for input_header in header.find_all("input"):
