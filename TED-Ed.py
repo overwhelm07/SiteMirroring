@@ -48,6 +48,8 @@ index['href'] = './index.html'
 extract_header(header)
 soup.find("footer").extract()
 a_copy = soup.find("div", class_="copy").p.a.extract()
+a_pages_link = soup.find_all("a", class_="pages-featured-link")[1]
+a_pages_link['href'] = "https://www.ted.com" + a_pages_link['href']
 
 # Download images from div .pages-module
 div_pages_module = soup.find("div", class_="pages-module")
