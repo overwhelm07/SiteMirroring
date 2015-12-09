@@ -3,14 +3,42 @@ import urllib2
 import codecs
 from bs4 import BeautifulSoup
 
+# Get soup object from html page
 def get_soup(_url):
 	url = _url
 	html = urllib2.urlopen(url)
 	soup = BeautifulSoup(html, "lxml")
 	return soup
+
+# Extract header elements except logo
+def extract_header(_header):
+	for a in _header.find_all("a", class_="nav__link"):
+		a.extract()
+	for input_header in _header.find_all("input"):
+		input_header.extract()
+	for a_banner__account__link in _header.find_all("a", class_="banner__account__link"):
+		a_banner__account__link.extract()
+
+# Remove contents not related to the video
+def prettify_video_soup(soupVideo):
+	div_talk_section = soupVideo.find_all("div", class_="talk-section")
+	a_talk_subsection = soupVideo.find("div", class_="talk-subsection").find_all("a")
+	for div_video in div_talk_section:
+		div_video.extract()
+	for a_talk in a_talk_subsection:
+		a_talk['href'] = "https://www.ted.com" + a_talk['href']
+
+	extract_header(soupVideo.find("header"))
+	#soupVideo.find("footer").extract()
+
+	soupVideo.find("a", class_="player-hero__teaser").extract()
+	speaker = soupVideo.find("a", class_="talk-speaker__image")
+	speaker_name = soupVideo.find("a", class_="talk-speaker__link")
+	speaker['href'] = speaker_name['href'] = "https://www.ted.com" + speaker['href']
+
 # Main Page Parsing
 soup = get_soup('https://www.ted.com/watch/ted-ed')
- 
+
 head = soup.find("head")
 header = soup.find("header")
 div_main = soup.find("div", class_="pages-main")
@@ -63,13 +91,7 @@ for a in videoHref:
 	cnt += 1	
 	# print a['href'] 
 
-
-for a in header.find_all("a", class_="nav__link"):
-	a.extract()
-for input_header in header.find_all("input"):
-	input_header.extract()
-for a_banner__account__link in header.find_all("a", class_="banner__account__link"):
-	a_banner__account__link.extract()
+extract_header(header)
 
 u_head = unicode(str(head), "utf-8")
 u_header = unicode(str(header), "utf-8")
@@ -97,23 +119,32 @@ soupVideo5 = get_soup(video5)
 soupVideo6 = get_soup(video6)
 soupVideo7 = get_soup(video7)
 soupVideo8 = get_soup(video8)
+
+
 for i in range(1, 9):	
 	f = codecs.open(os.curdir + "/video"+str(i)+".html", "w", "utf-8")
 	if(i == 1):
+		prettify_video_soup(soupVideo1)
 		f.write(soupVideo1.prettify())
 	elif(i == 2):
+		prettify_video_soup(soupVideo2)
 		f.write(soupVideo2.prettify())
 	elif(i == 3):
+		prettify_video_soup(soupVideo3)
 		f.write(soupVideo3.prettify())
 	elif(i == 4):
+		prettify_video_soup(soupVideo4)
 		f.write(soupVideo4.prettify())
 	elif(i == 5):
+		prettify_video_soup(soupVideo5)
 		f.write(soupVideo5.prettify())
 	elif(i == 6):
-		f.write(soupVideo6.prettify())
+		prettify_video_soup(soupVideo6)
 	elif(i == 7):
+		prettify_video_soup(soupVideo7)
 		f.write(soupVideo7.prettify())
 	elif(i == 8):
+		prettify_video_soup(soupVideo8)
 		f.write(soupVideo8.prettify())	
 	f.close()
 
