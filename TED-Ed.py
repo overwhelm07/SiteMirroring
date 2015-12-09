@@ -29,7 +29,7 @@ def prettify_video_soup(soupVideo):
 		a_talk['href'] = "https://www.ted.com" + a_talk['href']
 
 	extract_header(soupVideo.find("header"))
-	#soupVideo.find("footer").extract()
+	soupVideo.find("footer").extract()
 
 	soupVideo.find("a", class_="player-hero__teaser").extract()
 	speaker = soupVideo.find("a", class_="talk-speaker__image")
@@ -45,6 +45,10 @@ div_main = soup.find("div", class_="pages-main")
 
 index = header.find("a", class_="g-logo-small banner__logo")
 index['href'] = './index.html'
+
+extract_header(header)
+soup.find("footer").extract()
+a_copy = soup.find("div", class_="copy").p.a.extract()
 
 # Download images from div .pages-module
 div_pages_module = soup.find("div", class_="pages-module")
@@ -89,25 +93,9 @@ for a in videoHref:
 		video8 = 'http://www.ted.com' + a['href']
 		a['href'] = './video8.html'	
 	cnt += 1	
-	# print a['href'] 
-
-extract_header(header)
-
-u_head = unicode(str(head), "utf-8")
-u_header = unicode(str(header), "utf-8")
-u_div_main = unicode(str(div_main), "utf-8")
 
 f = codecs.open(os.curdir + "/index.html", "w", "utf-8")
-f.write(u"<html>\n")
-f.write(u_head)
-f.write(u"\n")
-f.write(u_header)
-f.write(u"\n")
-f.write(u"<body>\n")
-f.write(u_div_main)
-f.write(u"\n")
-f.write(u"</body>\n")
-f.write(u"</html>\n")
+f.write(soup.prettify())
 f.close()
 
 # Video Site
@@ -119,7 +107,6 @@ soupVideo5 = get_soup(video5)
 soupVideo6 = get_soup(video6)
 soupVideo7 = get_soup(video7)
 soupVideo8 = get_soup(video8)
-
 
 for i in range(1, 9):	
 	f = codecs.open(os.curdir + "/video"+str(i)+".html", "w", "utf-8")
@@ -147,5 +134,3 @@ for i in range(1, 9):
 		prettify_video_soup(soupVideo8)
 		f.write(soupVideo8.prettify())	
 	f.close()
-
-
