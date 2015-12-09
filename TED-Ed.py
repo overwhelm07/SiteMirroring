@@ -30,7 +30,6 @@ def prettify_video_soup(soupVideo):
 
 	extract_header(soupVideo.find("header"))
 	soupVideo.find("footer").extract()
-
 	soupVideo.find("a", class_="player-hero__teaser").extract()
 	speaker = soupVideo.find("a", class_="talk-speaker__image")
 	speaker_name = soupVideo.find("a", class_="talk-speaker__link")
