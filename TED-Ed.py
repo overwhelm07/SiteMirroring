@@ -18,6 +18,20 @@ div_main = soup.find("div", class_="pages-main")
 index = header.find("a", class_="g-logo-small banner__logo")
 index['href'] = './index.html'
 
+# Download images from div .pages-module
+div_pages_module = soup.find("div", class_="pages-module")
+div_pages_image = div_pages_module.find_all("div", class_="pages-carousel__image")
+for div in div_pages_image:
+	style = div['style']
+	image_url = "http:" + div['style'][21:-2]
+	image_file_name = image_url.split('/')[-1].split('?')[0]
+	print image_file_name
+	image_object = urllib2.urlopen(image_url)
+	image_file = open(os.curdir + "/" + image_file_name, "wb")
+	image_file.write(image_object.read())
+	image_file.close()
+	div['style'] = style.replace(style[:], "background-image:url(./" + image_file_name + ")")
+
 videoLink = soup.find("div", class_="row-sm-4up")
 videoHref = videoLink.find_all("a")
 cnt = 1
